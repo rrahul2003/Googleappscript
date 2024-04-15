@@ -1,0 +1,305 @@
+ This project is in two park
+
+
+
+                                                              HTML Code
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <?!= include('style');?>
+
+  </head>
+
+  <body>
+
+    <form id="myform">
+
+      <h3>Employee Info</h3>
+
+      <div class="empinfo">
+
+        <label for="name">User Name</label>
+
+        <input type="text" name="uname" id="name" />
+
+      </div>
+
+
+
+      <div class="empinfo">
+
+        <label for="fname">Father Name</label>
+
+        <input type="text" name="faname" id="faname" />
+
+      </div>
+
+
+
+      <div class="empinfo">
+
+        <label for="name">Email Id</label>
+
+        <input type="email" name="email" id="email" />
+
+      </div>
+
+
+
+      <div class="empinfo">
+
+        <label for="name">User Name</label>
+
+        <input type="text" name="uname" id="name" />
+
+      </div>
+
+
+
+      <div class="btn">
+
+        <button id="btn">Submit</button>
+
+      </div>
+
+    </form>
+
+<?!= include('java');?>
+  </body>
+
+</html>
+
+
+
+                                                        CSS Code
+
+
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+}
+
+
+
+#myform {
+
+  width: 230px;
+
+  height: auto;
+
+  border: 2px solid green;
+
+  padding: 20px 10px;
+
+  margin: 20px auto auto;
+
+  border-radius: 10px;
+
+  background-color: #97e7e1;
+
+}
+
+
+
+#myform h3 {
+
+  font-size: 18px;
+
+  margin-bottom: 15px;
+
+  text-align: center;
+
+  color: darkblue;
+
+}
+
+
+
+.empinfo {
+
+  margin-bottom: 6px;
+
+}
+
+
+
+.empinfo label {
+
+  font-size: 12px;
+
+}
+
+
+
+.empinfo input {
+
+  width: 200px;
+
+  outline: none;
+
+}
+
+
+
+.btn {
+
+  width: 200px;
+
+  text-align: center;
+
+}
+
+
+
+#btn {
+
+  padding: 3px 30px;
+
+  border: none;
+
+  outline: none;
+
+  background-color: blue;
+
+  color: #ffff;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+}
+
+
+                                                          Java.html file code
+
+
+<script>
+  
+var button = document.getElementById('btn').addEventListener('click',getFormData);
+
+function getFormData(e) {
+
+  e.preventDefault()
+
+  let userName = document.getElementById('name').value;
+  let fname = document.getElementById('faname').value;
+  let email = document.getElementById('email').value;
+  let mobile = document.getElementById('mobnum').value;
+
+  // now after targetting all above elements we will run google.script.run API to render data from client side to server side
+
+  google.script.run.withSuccessHandler(()=>{
+    
+
+  document.getElementById('name').value ='';
+  document.getElementById('faname').value ='';
+  document.getElementById('email').value = '';
+  document.getElementById('mobnum').value = '';
+
+  }).pasteDataInSheet(userName,fname,email,mobile);
+  // now the function name "pasteDataInSheet" we have to declare it in our Code.gs file
+
+};
+
+
+</script>
+    
+                                                          Code.gs file code 
+
+
+function doGet(){
+
+  return HtmlService.createTemplateFromFile('index').evaluate();
+};
+
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+};
+
+function pasteDataInSheet (uname,fname,email,mobile) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  sheet.appendRow([uname,fname,email,mobile]);  
+};
+
+
+
+                                           How the form will look Like
+
+                            
+
+
+
+                                                        Important Note
+
+1. In app script editor, for html code , we need to create a html file and paste the code in file
+2. for CSS code we cannot directly paste the CSS code in html file in app script editor, first
+    we will open the "<style>" tag and close it with "</style>" then we will paste the the CSS code
+3. Now in App script editor we have to deploy the web app and will give the name "Version 1"
+    and it will look like below pic
+
+                                                 
+
+
+
+
+4. We can see in above pic that it doesn't look like the , when we saw it in "VS code edtor" for this 
+    we have to connect the "CSS" file to "html" file but with different method, particularly in app script
+    editor, we have to link the CSS file with "<?!=?>"  tag in html file and also write a function and 
+   same function we have to declare in ".gs" file, after doing this exercise the form will look like below
+  in browser
+
+                                           
+5. We have to create another "html" file in app script editor and we will give name java.html
+    name java because we will write the javascript in this file and we have to connect this java file
+   to index.html file which we create earlier and as we link the CSS file and we will also link this
+   java file to index.html file with same "<?!=?>" tag and after connecting out file with 
+   <?!=include('java');?> we will check by writing <script> console.log('hello') </script> in file name
+   java, it will render 'hello" in console in browser after refreshing the browser
+
+6. For testing purpose if we click the "submit" button in browser our form will disappear, and here it's
+   important to know that the by Default nature of <form> tag is to reload the page, that's the reason
+   our form will first disappear and display again after reloading it.
+
+7. Now we will declare a variable and target the "name" element of index.html file, after targetting 
+    all the elements we will run google.script.run API to render data from client side to server side
+    and declare a function with all parameter having the same name of html elements here we have declared function name "pasteDataInSheet".We will declare this function with "withSuccessHandler"
+     function to reset the page after submitting data
+
+8. Now we have to declare this "pasteDataInSheet" function in our code.gs sheet also.
+
+
+                                                   Deployment URL
+
+Deployment ID
+
+AKfycbyp04Tbvkfbt3ZNWzilwoxyPW56fx9lOKOlMnh0zOH12GYcIYplPWeerKP6RZpL83_BfA
+
+
+Web app
+URL
+
+https://script.google.com/macros/s/AKfycbyp04Tbvkfbt3ZNWzilwoxyPW56fx9lOKOlMnh0zOH12GYcIYplPWeerKP6RZpL83_BfA/exec
+
+
+https://tinyurl.com/23xns79h
+
